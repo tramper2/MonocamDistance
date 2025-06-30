@@ -30,7 +30,7 @@ class DistanceVisualizationApp:
         
         # 카메라 설정
         self.camera_height = 2.0  # 기본 높이 2미터
-        self.camera_pitch = 15.0  # 기본 피치 15도
+        self.camera_pitch = 45.0  # 기본 피치 45도 (테스트를 위해 증가)
         
         # 시각화할 거리들 (미터)
         self.distances = [1.0, 2.0, 3.0, 5.0, 7.0, 10.0, 15.0]
@@ -299,7 +299,8 @@ def create_test_image():
     
     # 카메라 모델 초기화
     camera = CameraModel("GasCameraCalibrationLogitec.json" if os.path.exists("GasCameraCalibrationLogitec.json") else None)
-    camera.set_camera_pose(height=2.0, pitch_deg=15.0)
+    # Z_cam > 0 조건을 만족시키기 위해 파라미터 변경
+    camera.set_camera_pose(height=0.5, pitch_deg=60.0)
     
     # 테스트 이미지 생성
     image_width, image_height = 640, 480
@@ -325,13 +326,14 @@ def create_test_image():
     cv2.putText(image, f"Test Image - {success_count}/{len(distances)} arcs", 
                (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
     
-    # 결과 표시
-    cv2.imshow("Distance Visualization - Test Image", image)
-    cv2.imwrite("test_distance_visualization.jpg", image)
-    print("✅ 테스트 이미지 저장: test_distance_visualization.jpg")
-    print("아무 키나 눌러 종료...")
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # 결과 표시 및 저장
+    output_filename = "test_distance_visualization_output.jpg"
+    cv2.imwrite(output_filename, image)
+    print(f"✅ 테스트 이미지 저장: {output_filename}")
+
+    # GUI 관련 코드 제거 (cv2.imshow, cv2.waitKey, cv2.destroyAllWindows)
+    # 이 함수는 이제 이미지를 저장하고 종료합니다.
+    # print("테스트 이미지 생성 완료. 저장된 파일을 확인하세요.")
 
 def main():
     """메인 함수"""
